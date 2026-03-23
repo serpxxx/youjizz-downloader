@@ -1,313 +1,169 @@
-# YouJizz Downloader Browser Extension (Chrome, Firefox, Edge, Opera, Brave)
+# YouJizz Downloader (Browser Extension)
 
+> Download supported YouJizz videos as MP4 files directly from watch pages in your browser.
 
-## Related
+YouJizz Downloader is a browser extension built for users who want a cleaner way to save supported YouJizz videos for offline viewing. It detects the active media source on the page, surfaces available quality options when present, and exports the final file as MP4 without forcing you into manual URL extraction or command-line tooling.
 
----
-<details>
-<summary>
-  Research
-</summary>
-# How to Download YouJizz Videos: Technical Analysis of Stream Patterns, CDNs, and Download Methods
-*A comprehensive research document analyzing YouJizz's video infrastructure, embed patterns, stream formats, and optimal download strategies using modern tools*
-**Authors**: SERP Apps  
-**Date**: December 2025  
-**Version**: 1.0
----
-- [YouJizz Downloader gist](https://gist.github.com/devinschumacher/b4834cf231c2305daa59afa7ad3a99d2)
-## Abstract
+- Save supported YouJizz videos from the browser
+- Detect direct files and player-backed video streams
+- Choose from available quality levels when exposed
+- Export MP4 files for simpler playback and archiving
+- Keep the workflow browser-native and repeatable
 
-This research document outlines YouJizz watch page patterns, JSON configuration payloads containing encodings, and CDN delivery patterns for MP4 and HLS assets.
+## Links
+
+- :rocket: Get it here: [YouJizz Downloader](https://serp.ly/youjizz-downloader)
+- :new: Latest release: [GitHub Releases](https://github.com/serpapps/youjizz-downloader/releases/latest)
+- :question: Help center: [SERP Help](https://help.serp.co/en/)
+- :beetle: Report bugs: [GitHub Issues](https://github.com/serpapps/youjizz-downloader/issues)
+- :bulb: Request features: [Feature Requests](https://github.com/serpapps/youjizz-downloader/issues)
+
+## Preview
+
+![YouJizz Downloader workflow preview](assets/workflow-preview.webp)
 
 ## Table of Contents
 
-1. [Introduction](#1-introduction)
-2. [YouJizz Video Infrastructure Overview](#2-youjizz-video-infrastructure-overview)
-3. [URL Patterns and Detection](#3-url-patterns-and-detection)
-4. [Stream Formats and CDN Analysis](#4-stream-formats-and-cdn-analysis)
-5. [yt-dlp Implementation Strategies](#5-yt-dlp-implementation-strategies)
-6. [FFmpeg Processing Techniques](#6-ffmpeg-processing-techniques)
-7. [Alternative Tools and Backup Methods](#7-alternative-tools-and-backup-methods)
-8. [YouJizz API Integration](#8-youjizz-api-integration)
-9. [Implementation Recommendations](#9-implementation-recommendations)
-10. [Troubleshooting and Edge Cases](#10-troubleshooting-and-edge-cases)
-11. [Conclusion](#11-conclusion)
+- [Why YouJizz Downloader](#why-youjizz-downloader)
+- [Features](#features)
+- [How It Works](#how-it-works)
+- [Step-by-Step Tutorial: How to Download Videos from YouJizz](#step-by-step-tutorial-how-to-download-videos-from-youjizz)
+- [Supported Formats](#supported-formats)
+- [Who It's For](#who-its-for)
+- [Common Use Cases](#common-use-cases)
+- [Trial & Access](#trial--access)
+- [Troubleshooting](#troubleshooting)
+- [Installation Instructions](#installation-instructions)
+- [FAQ](#faq)
+- [License](#license)
+- [Notes](#notes)
+- [About YouJizz](#about-youjizz)
 
----
+## Why YouJizz Downloader
 
-## 1. Introduction
+YouJizz pages can expose different playback sources depending on the page state, player config, and available encodings. Generic downloaders often grab the wrong asset, miss the real video source, or fail once the site serves multiple variants from the same page.
 
-YouJizz uses a custom player that exposes multiple encodings in JSON or inline JavaScript. Direct MP4 links and optional HLS manifests can be extracted from these payloads.
+YouJizz Downloader is designed to simplify that. It uses multi-source detection to find streams from flashvars, HTML5 video elements, and media API endpoints. Start the video, let the extension detect the active media source, then export the supported stream as MP4 without leaving the browser.
 
-### 1.1 Research Scope
+## Features
 
-- YouJizz watch pages and player configuration
-- Encodings arrays with multiple quality levels
-- Direct MP4 and optional HLS URLs
+- Detects supported YouJizz video sources from active pages
+- Multi-source detection covering flashvars, HTML5 video, and media API
+- In-page download button built into the video player
+- Handles direct-file and supported player-backed download flows
+- Converts HLS streams to standard MP4 files in-browser
+- Lists available quality variants when multiple encodings exist
+- Right-click context menu for quick downloads
+- Exports MP4 files for easier offline playback
+- Auto-saves to an organized YouJizz subfolder in Downloads
+- Works on Chrome, Edge, Brave, Opera, Firefox, Whale, and Yandex
 
-### 1.2 Methodology
+## How It Works
 
-- Inspect inline scripts for encodings JSON
-- Capture network requests during playback
-- Validate media URLs with ffprobe
+1. Install the extension from the latest release.
+2. Open a YouJizz video page and press play.
+3. Let the extension detect the active media source.
+4. Open the popup or use the in-page download button on the player.
+5. Select the quality you want from the available resolutions.
+6. Start the download and wait for the MP4 export to finish.
+7. Save the finished file locally.
 
----
+## Step-by-Step Tutorial: How to Download Videos from YouJizz
 
-## 2. YouJizz Video Infrastructure Overview
+1. Install YouJizz Downloader in your browser.
+2. Open the YouJizz watch page for the video you want.
+3. Start playback so the player loads the full media stream.
+4. Click the in-page download button on the player, or open the extension popup.
+5. Review the detected source and available quality options.
+6. Choose the quality you want if multiple resolutions are shown.
+7. Start the download and wait for the MP4 export to finish.
+8. Open the saved file from your Downloads/YouJizz folder.
 
-### 2.1 Video Hosting Types
+## Supported Formats
 
-- Direct MP4 hosting
-- Optional HLS playlists for adaptive streaming
+- Input: supported YouJizz video sources
+- Output: MP4
 
-### 2.2 CDN Architecture
+Saved files use MP4 so they are easier to replay on standard media players, move between devices, or archive locally.
 
-- Primary site domain: youjizz.com
-- Video assets hosted on CDN subdomains
+## Who It's For
 
-### 2.3 Video Processing Pipeline
+- Users who want offline copies of supported YouJizz videos
+- Viewers who prefer a browser extension over manual extraction
+- People archiving videos they already have browser access to
+- Users who want simple MP4 output for later playback
+- Anyone organizing personal downloads into a cleaner local library
 
-1. User loads watch page
-2. Player script loads encodings JSON
-3. Client chooses quality and requests MP4/HLS
+## Common Use Cases
 
-### 2.4 Access Control and Authentication
+- Save a supported YouJizz video for later
+- Export a playable MP4 copy of a watch-page video
+- Download the best quality exposed by the page
+- Avoid digging through page scripts for video URLs
+- Keep local offline copies for repeat viewing
 
-- Most public content is ungated
-- Some assets may require referer headers
+## Trial & Access
 
----
+- Includes **3 free downloads** so you can test the workflow first
+- Email sign-in uses secure one-time password verification
+- No credit card required for the trial
+- Unlimited downloads are available with a paid license
 
-## 3. URL Patterns and Detection
+Start here: [https://serp.ly/youjizz-downloader](https://serp.ly/youjizz-downloader)
 
-### 3.1 Watch Page URL Patterns
+## Troubleshooting
 
-```
-https://www.youjizz.com/videos/<slug>-<id>.html
-```
+**The extension does not detect the video**  
+Press play first and wait for the page to initialize the active source.
 
-### 3.2 Embed URL Patterns
+**Only one quality is listed**  
+Some pages expose only one usable source, so no extra picker appears.
 
-```
-https://www.youjizz.com/videos/embed/<id>
-```
+**The wrong source was detected**
+Refresh the page, start playback again, and retry after the player fully loads.
 
-### 3.3 Direct Media and CDN URL Patterns
+**The download failed partway through**
+Check your connection and refresh the page before starting again.
 
-```
-https://cdn.youjizz.com/videos/<id>/<quality>.mp4
-https://cdn.youjizz.com/videos/<id>/master.m3u8
-```
+**The page requires account access**
+The extension only works on media you can already open and play in your active browser session.
 
-### 3.4 Regex Patterns for URL Extraction
+## Installation Instructions
 
-```regex
-youjizz\\.com/videos/.*-(\\d+)\\.html
-encodings\\s*:\\s*\\[
-```
+1. Open the latest release page: [GitHub Releases](https://github.com/serpapps/youjizz-downloader/releases/latest)
+2. Download the build for your browser.
+3. Install the extension.
+4. Open a YouJizz video page.
+5. Use the popup to detect and download the media.
 
-### 3.5 Command-line URL Extraction
+## FAQ
 
-```bash
-grep -oE "https?://[^'\" ]+\.(mp4|m3u8)" page.html | sort -u
-grep -nE "encodings|videoUrl|hls" page.html
-```
+**Can I download YouJizz videos as MP4?**  
+Yes. Supported downloads are exported as MP4 files.
 
----
+**Do I need extra software?**  
+No. The workflow stays inside the browser extension.
 
-## 4. Stream Formats and CDN Analysis
+**Will it work on every page?**
+It works on supported playback flows. Detection depends on how the page exposes the current media source.
 
-### 4.1 Stream Formats
+**Where are videos saved?**
+They are saved to your default Downloads location, typically inside a YouJizz subfolder.
 
-| Format | Extension | Notes |
-|--------|-----------|-------|
-| MP4 (progressive) | .mp4 | Multiple encodes per quality |
-| HLS (adaptive) | .m3u8 | Used for adaptive streaming when present |
+**Is my data safe?**
+Yes. Video processing happens entirely in your browser. Authentication uses secure OTP with no passwords stored.
 
-### 4.2 Typical Quality Ladder
+## License
 
-| Quality | Typical Resolution | Notes |
-|---------|--------------------|-------|
-| Low | 360p - 480p | Fast preview streams or mobile variants |
-| Medium | 720p | Common default for web playback |
-| High | 1080p+ | Available when source uploads are higher quality |
+This repository is distributed under the proprietary SERP Apps license in the [LICENSE](LICENSE) file. Review that file before copying, modifying, or redistributing any part of this project.
 
-### 4.3 CDN URL Construction and Query Parameters
+## Notes
 
-- Encodings JSON usually contains URL and quality
-- Quality may be expressed in height or label
+- Only download content you own or have explicit permission to save
+- An internet connection is required for downloads
+- Quality depends on the media source exposed by YouJizz
+- Must press play before detection can begin
 
-### 4.4 Validation and Inspection Commands
+## About YouJizz
 
-```bash
-ffprobe -hide_banner -show_streams "video.mp4"
-```
-
----
-
-## 5. yt-dlp Implementation Strategies
-
-yt-dlp can parse watch URLs directly when an extractor exists, or you can pass the direct MP4/HLS URL.
-
-### 5.1 Basic Usage
-
-```bash
-yt-dlp [OPTIONS] [--] URL [URL...]
-yt-dlp -F "https://example.com/watch/123"
-```
-
-### 5.2 Authentication and Cookies
-
-- Add referer headers if CDN returns 403
-
-### 5.3 Format Selection and Output Templates
-
-```bash
-yt-dlp -f bestvideo+bestaudio/best "URL"
-yt-dlp -o "%(title)s.%(ext)s" "URL"
-yt-dlp --download-archive archive.txt "URL"
-```
-
-### 5.4 Site-Specific Examples
-
-```bash
-yt-dlp "https://www.youjizz.com/videos/<slug>-<id>.html"
-yt-dlp -F "https://www.youjizz.com/videos/<slug>-<id>.html"
-yt-dlp "https://cdn.youjizz.com/videos/<id>/<quality>.mp4"
-```
-
-### 5.5 Batch and Archive Mode
-
-```bash
-yt-dlp -a urls.txt --download-archive archive.txt
-yt-dlp --no-overwrites --continue "URL"
-```
-
-### 5.6 Error Handling Patterns
-
-- Use --add-header 'Referer: https://www.youjizz.com/' for CDN assets
-
----
-
-## 6. FFmpeg Processing Techniques
-
-FFmpeg is best used for remuxing HLS playlists or validating MP4 outputs.
-
-### 6.1 Inspect and Validate Streams
-
-```bash
-ffmpeg -i "https://cdn.youjizz.com/videos/<id>/master.m3u8" -c copy output.mp4
-```
-
-### 6.2 Common Remux and Repair Patterns
-
-```bash
-ffmpeg -i "playlist.m3u8" -c copy output.mp4
-ffmpeg -i input.mp4 -c copy -movflags +faststart output.mp4
-ffprobe -hide_banner -show_streams output.mp4
-```
-
----
-
-## 7. Alternative Tools and Backup Methods
-
-### 7.1 Streamlink
-
-```bash
-streamlink "https://www.youjizz.com/videos/<slug>-<id>.html" best -o output.mp4
-```
-
-### 7.2 aria2c
-
-```bash
-aria2c -o video.mp4 "https://cdn.youjizz.com/videos/<id>/<quality>.mp4"
-```
-
-### 7.3 gallery-dl
-
-```bash
-gallery-dl "https://www.youjizz.com/videos/<slug>-<id>.html"
-```
-
-### 7.4 Browser DevTools
-
-- Search for encodings JSON in inline scripts
-- Look for mp4 URLs in Network tab
-
----
-
-## 8. YouJizz API Integration
-
-### 8.1 Known Endpoints
-
-- None documented; rely on page and player data extraction
-
-### 8.2 Example Requests
-
-```
-# No public API calls identified; extract URLs from HTML/player data
-```
-
-### 8.3 Token and Session Handling
-
-- No public API documented; use player config payloads
-
----
-
-## 9. Implementation Recommendations
-
-### 9.1 Detection Hierarchy
-
-- Parse encodings array for MP4 URLs
-- Fallback to HLS playlist if available
-
-### 9.2 Site-Specific Notes
-
-- Choose highest bitrate encode by resolution
-- Prefer MP4 for faster downloads
-
-### 9.3 Storage and Naming Strategy
-
-- Use video ID in filenames
-
----
-
-## 10. Troubleshooting and Edge Cases
-
-- Encodings array may be loaded via XHR; capture in Network tab
-
----
-
-## 11. Conclusion
-
-YouJizz provides multiple MP4 encodings and occasional HLS manifests in its player configuration. A robust downloader should parse the encodings array and select the best available URL, falling back to HLS when needed.
-
-| Tool | Best Use Case | Notes |
-|------|---------------|-------|
-| yt-dlp | Primary downloader for MP4/HLS | Supports cookies, format selection, retries |
-| ffmpeg | Remuxing and validation | Useful for HLS to MP4 conversion |
-| streamlink | Live/HLS fallback | Streams to file or pipes into ffmpeg |
-| aria2c | Multi-connection HTTP/HLS downloads | Good for large files and retries |
-| gallery-dl | Image-first or gallery-heavy sites | Best for gallery or attachment extraction |
-
-
----
-
-## Disclaimer and Ethical Use
-
-This document is provided for lawful, personal, or authorized use cases only. Always respect the site terms of service, content creator rights, and applicable laws. If DRM or explicit access controls are present, do not attempt to bypass them; use official downloads or creator-provided access instead.
-
-## Last Updated
-
-December 2025
-
-## Next Review
-
-90 days from last update or when site playback changes are observed.
-
-## Related
-
-- SERP Apps research index (internal)
-- SERP extension downloaders (internal)
-
-</details>
+YouJizz is a video platform with multiple source variants and changing player states across pages. YouJizz Downloader is built to make supported downloads easier for users who already have access to that content in the browser.
