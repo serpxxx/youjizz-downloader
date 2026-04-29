@@ -5,6 +5,6 @@
   "input": "./INPUT_SCHEMA.json",
   "name": "youjizz-downloader",
   "readme": "../ACTOR.md",
-  "title": "YouJizz Downloader Browser Extension",
+  "title": "YouJizz Downloader",
   "version": "0.0"
 }
