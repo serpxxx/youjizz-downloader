@@ -1,4 +1,4 @@
-# YouJizz Downloader Browser Extension
+# YouJizz Downloader
 
 > Download supported YouJizz videos as MP4 files directly from watch pages in your browser.
 
