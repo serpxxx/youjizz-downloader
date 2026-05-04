@@ -1,8 +1,12 @@
-# YouJizz Downloader
+# YouJizz Video Downloader | How to Download YouJizz Videos
 
 > Download supported YouJizz videos as MP4 files directly from watch pages in your browser.
 
-![Youjizz Downloader](https://raw.githubusercontent.com/serpxxx/youjizz-downloader/main/assets/workflow-preview.webp)
+## Get it Here
+
+Get it here: https://serp.ly/youjizz-downloader
+
+![YouJizz Downloader](https://raw.githubusercontent.com/serpxxx/youjizz-downloader/main/assets/workflow-preview.webp)
 
 YouJizz Downloader is a browser extension built for users who want a cleaner way to save supported YouJizz videos for offline viewing. It detects the active media source on the page, surfaces available quality options when present, and exports the final file as MP4 without forcing you into manual URL extraction or command-line tooling.
 
@@ -11,11 +15,6 @@ YouJizz Downloader is a browser extension built for users who want a cleaner way
 - Choose from available quality levels when exposed
 - Export MP4 files for simpler playback and archiving
 - Keep the workflow browser-native and repeatable
-
-## Get it Here
-
-Get it here: https://serp.ly/youjizz-downloader
-
 ## Table of Contents
 
 - [Why YouJizz Downloader](#why-youjizz-downloader)
